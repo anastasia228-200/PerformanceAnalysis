@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: performance-analysis-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: testing_results
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./testing_results.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    image: ${DOCKER_USERNAME}/performance-analysis:latest
+    container_name: performance-analysis-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=testing_results;Username=postgres;Password=postgres
+      - ConnectionStrings__Auth=Host=postgres;Port=5432;Database=testing_results;Username=postgres;Password=postgres
+      - JwtSettings__Issuer=PerformanceAnalysis
+      - JwtSettings__Audience=PerformanceAnalysis
+      - JwtSettings__SecretKey=super-secret-key-for-development-only-change-in-production
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
