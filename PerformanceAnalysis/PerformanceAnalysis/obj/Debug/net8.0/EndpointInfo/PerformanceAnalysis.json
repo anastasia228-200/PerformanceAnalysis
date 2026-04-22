@@ -1,0 +1,479 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PerformanceAnalysis API",
+    "description": "Система анализа успеваемости студентов. Практики 42-50, ДЗ 20-24.",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Регистрация нового студента.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Вход по логину/email и паролю — возвращает JWT.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/login-with-cookie": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Урок 47: Вход через Cookie.\r\nБраузер автоматически сохранит Cookie и будет отправлять его с каждым запросом.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginWithCookieRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginWithCookieRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginWithCookieRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Урок 47: Выход — удаляет Cookie-сессию на сервере.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Урок 47: Тестовый эндпоинт — возвращает claims текущего пользователя.\r\nРаботает как с JWT (заголовок Authorization: Bearer), так и с Cookie.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/group-leaders": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Лидеры и отстающие по каждой группе. Доступно менеджерам и студентам.",
+        "parameters": [
+          {
+            "name": "DirectionId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "CourseId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/student-test-results": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Результаты тестов студента.\r\nСтуденты могут смотреть только свои результаты; менеджеры — любые.",
+        "parameters": [
+          {
+            "name": "StudentId",
+            "in": "query",
+            "description": "ID студента. Если не указан — берётся из токена/cookie для студентов.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/group-trend": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Динамика среднего балла по группам. Доступно менеджерам и студентам.",
+        "parameters": [
+          {
+            "name": "GroupIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          {
+            "name": "DateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "DateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/student-monthly-progress": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Ежемесячный прогресс студента.\r\nСтуденты могут смотреть только свои данные; менеджеры — любые.",
+        "parameters": [
+          {
+            "name": "StudentId",
+            "in": "query",
+            "description": "ID студента. Если не указан — берётся из токена/cookie для студентов.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/student-rating": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Общий рейтинг студентов. Доступно менеджерам и студентам.",
+        "parameters": [
+          {
+            "name": "DirectionId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "CourseId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "GroupId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/student-pass-rate": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Процент пройденных тестов по студентам группы. Доступно менеджерам и студентам.",
+        "parameters": [
+          {
+            "name": "GroupId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/student-pass-rate-summary": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Сводка по прохождению тестов конкретного студента.\r\nСтуденты могут смотреть только свои данные; менеджеры — любые.",
+        "parameters": [
+          {
+            "name": "StudentId",
+            "in": "query",
+            "description": "ID студента. Если не указан — берётся из токена/cookie для студентов.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/day-of-week-activity": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Активность студентов по дням недели. Доступно менеджерам и студентам.",
+        "parameters": [
+          {
+            "name": "DateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "DateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "GroupId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "loginOrEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Запрос на вход (логин или email + пароль)."
+      },
+      "LoginWithCookieRequest": {
+        "type": "object",
+        "properties": {
+          "loginOrEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "rememberMe": {
+            "type": "boolean",
+            "description": "Если true — Cookie живёт 30 дней, иначе 8 часов."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Запрос на вход через Cookie."
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "middleName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "vkProfileLink": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Запрос на регистрацию нового студента."
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Введите: Bearer {ваш_токен}",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      },
+      "Cookie": {
+        "type": "apiKey",
+        "description": "Введите cookie в формате: PerformanceAnalysis.Auth=ваше_значение",
+        "name": "Cookie",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "Cookie": [ ]
+    }
+  ]
+}

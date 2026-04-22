@@ -1,0 +1,406 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PerformanceAnalysis</name>
+    </assembly>
+    <members>
+        <member name="T:PerformanceAnalysis.Application.Auth.IAuthService">
+            <summary>Сервис аутентификации и регистрации пользователей.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Application.Auth.IAuthService.LoginWithCookieAsync(PerformanceAnalysis.Application.Auth.DTOs.LoginWithCookieRequest,System.Threading.CancellationToken)">
+            <summary>Урок 47: Вход через Cookie (stateful-сессия).</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Application.Auth.IAuthService.LogoutAsync(System.Threading.CancellationToken)">
+            <summary>Урок 47: Выход — удаляет Cookie-сессию.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Application.Auth.AuthService">
+            <inheritdoc />
+        </member>
+        <member name="M:PerformanceAnalysis.Application.Auth.AuthService.LoginWithCookieAsync(PerformanceAnalysis.Application.Auth.DTOs.LoginWithCookieRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:PerformanceAnalysis.Application.Auth.DTOs.AuthResponse">
+            <summary>Ответ API после успешного входа или регистрации.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Application.Auth.DTOs.AuthResponse.UseCookies">
+            <summary>True, если аутентификация выполнена через Cookie (а не JWT).</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Application.Auth.DTOs.LoginWithCookieRequest">
+            <summary>Запрос на вход через Cookie.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Application.Auth.DTOs.LoginWithCookieRequest.RememberMe">
+            <summary>Если true — Cookie живёт 30 дней, иначе 8 часов.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Application.Auth.DTOs.LoginRequest">
+            <summary>Запрос на вход (логин или email + пароль).</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Application.Auth.DTOs.RegisterRequest">
+            <summary>Запрос на регистрацию нового студента.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Application.Reports.IReportService">
+            <summary>Сервис построения аналитических отчётов по успеваемости.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Application.Reports.ReportService">
+            <inheritdoc />
+            <remarks>
+            Урок 49: ReportService переведён на IDapperExecutor вместо IDbConnection,
+            чтобы Dapper-вызовы можно было мокать в unit-тестах.
+            </remarks>
+        </member>
+        <member name="T:PerformanceAnalysis.Controllers.AuthController">
+            <summary>Аутентификация: регистрация и вход (JWT и Cookie).</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.AuthController.Register(PerformanceAnalysis.Application.Auth.DTOs.RegisterRequest)">
+            <summary>Регистрация нового студента.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.AuthController.Login(PerformanceAnalysis.Application.Auth.DTOs.LoginRequest)">
+            <summary>Вход по логину/email и паролю — возвращает JWT.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.AuthController.LoginWithCookie(PerformanceAnalysis.Application.Auth.DTOs.LoginWithCookieRequest)">
+            <summary>
+            Урок 47: Вход через Cookie.
+            Браузер автоматически сохранит Cookie и будет отправлять его с каждым запросом.
+            </summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.AuthController.Logout">
+            <summary>Урок 47: Выход — удаляет Cookie-сессию на сервере.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.AuthController.GetCurrentUser">
+            <summary>
+            Урок 47: Тестовый эндпоинт — возвращает claims текущего пользователя.
+            Работает как с JWT (заголовок Authorization: Bearer), так и с Cookie.
+            </summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Controllers.ReportsController">
+            <summary>Аналитические отчёты по успеваемости студентов.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetGroupLeaders(PerformanceAnalysis.Reports.Filters.GroupLeadersAndLaggardsFilter)">
+            <summary>Лидеры и отстающие по каждой группе. Доступно менеджерам и студентам.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetStudentTestResults(PerformanceAnalysis.Reports.Filters.StudentTestResultsFilter)">
+            <summary>
+            Результаты тестов студента.
+            Студенты могут смотреть только свои результаты; менеджеры — любые.
+            </summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetGroupTrend(PerformanceAnalysis.Reports.Filters.GroupTrendFilter)">
+            <summary>Динамика среднего балла по группам. Доступно менеджерам и студентам.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetStudentMonthlyProgress(PerformanceAnalysis.Reports.Filters.StudentMonthlyProgressFilter)">
+            <summary>
+            Ежемесячный прогресс студента.
+            Студенты могут смотреть только свои данные; менеджеры — любые.
+            </summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetStudentRating(PerformanceAnalysis.Reports.Filters.StudentRatingFilter)">
+            <summary>Общий рейтинг студентов. Доступно менеджерам и студентам.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetStudentPassRate(PerformanceAnalysis.Reports.Filters.StudentPassRateFilter)">
+            <summary>Процент пройденных тестов по студентам группы. Доступно менеджерам и студентам.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetStudentPassRateSummary(PerformanceAnalysis.Reports.Filters.StudentPassRateSummaryFilter)">
+            <summary>
+            Сводка по прохождению тестов конкретного студента.
+            Студенты могут смотреть только свои данные; менеджеры — любые.
+            </summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.GetDayOfWeekActivity(PerformanceAnalysis.Reports.Filters.DayOfWeekActivityFilter)">
+            <summary>Активность студентов по дням недели. Доступно менеджерам и студентам.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Controllers.ReportsController.ValidateStudentAccess(System.Nullable{System.Int32})">
+            <summary>
+            Проверка доступа к отчётам с фильтром по StudentId.
+            Менеджер — видит все данные.
+            Студент — только свои (studentId == null → подставляется из токена; чужой studentId → 403).
+            </summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Infrastructure.Auth.AuthDbContext">
+            <summary>
+            DbContext для аутентификации (Database-First, Практика 46).
+            Сгенерирован командой EF Core Scaffold, при необходимости доработан вручную.
+            </summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Infrastructure.Auth.Extensions.UserRoles">
+            <summary>Константы ролей пользователей.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Infrastructure.Auth.Extensions.HttpContextExtensions">
+            <summary>Extension-методы для получения информации о пользователе из HttpContext.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Infrastructure.Auth.Extensions.HttpContextExtensions.GetUserRole(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>Получить роль текущего пользователя из Claims.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Infrastructure.Auth.Extensions.HttpContextExtensions.IsManager(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>Проверить, является ли текущий пользователь менеджером.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Infrastructure.Auth.Extensions.HttpContextExtensions.IsStudent(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>Проверить, является ли текущий пользователь студентом.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.Infrastructure.Auth.Extensions.HttpContextExtensions.GetStudentId(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Получить StudentId из Claims (добавляется при входе через JWT или Cookie).
+            </summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Infrastructure.Reports.IDapperExecutor">
+            <summary>
+            Урок 49: Обёртка над Dapper-методами.
+            Extension-методы Dapper нельзя мокать напрямую — этот интерфейс решает проблему,
+            позволяя подменять реализацию в unit-тестах через Moq.
+            </summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Infrastructure.Reports.DapperExecutor">
+            <summary>Реальная реализация — делегирует вызовы Dapper.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Infrastructure.Reports.ReportQueries">
+            <summary>
+            Все SQL-запросы для отчётов. Параметризованы через Dapper (@ParamName).
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.GroupLeadersAndLaggards">
+            <summary>
+            Лидер и отстающий в каждой группе.
+            Параметры: @DirectionId (int?), @CourseId (int?)
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.StudentTestResults">
+            <summary>
+            Результаты тестов конкретного студента (лучшая попытка по каждому тесту).
+            Параметры: @StudentId (int)
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.GroupTrend">
+            <summary>
+            Динамика среднего балла по группам помесячно.
+            Параметры: @GroupIds (int[]?), @DateFrom (DateTime?), @DateTo (DateTime?)
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.StudentMonthlyProgress">
+            <summary>
+            Ежемесячный прогресс студента с нарастающим итогом.
+            Параметры: @StudentId (int)
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.StudentRating">
+            <summary>
+            Рейтинг студентов с оконной функцией ROW_NUMBER (топ-50).
+            Параметры: @DirectionId (int?), @CourseId (int?), @GroupId (int?)
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.StudentPassRate">
+            <summary>
+            Процент пройденных тестов из всех доступных — по каждому студенту группы.
+            Параметры: @GroupId (int?)
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.StudentPassRateSummary">
+            <summary>
+            Сводка по прохождению тестов конкретным студентом.
+            Параметры: @StudentId (int)
+            </summary>
+        </member>
+        <member name="F:PerformanceAnalysis.Infrastructure.Reports.ReportQueries.DayOfWeekActivity">
+            <summary>
+            Активность студентов по дням недели.
+            EXTRACT(DOW): 0=Sunday … 6=Saturday.
+            Параметры: @DateFrom (DateTime?), @DateTo (DateTime?), @GroupId (int?)
+            </summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.DayOfWeekActivityFilter">
+            <summary>Фильтр для отчёта «Активность по дням недели».</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.GroupLeadersAndLaggardsFilter">
+            <summary>Фильтр для отчёта «Лидеры и отстающие в группе».</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.GroupTrendFilter">
+            <summary>Фильтр для отчёта «Динамика среднего балла по группам».</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.StudentMonthlyProgressFilter">
+            <summary>Фильтр для отчёта «Ежемесячный прогресс студента».</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Filters.StudentMonthlyProgressFilter.StudentId">
+            <summary>ID студента. Если не указан — берётся из токена/cookie для студентов.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.StudentPassRateFilter">
+            <summary>Фильтр для отчёта «Процент пройденных тестов по студентам».</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.StudentPassRateSummaryFilter">
+            <summary>Фильтр для сводного отчёта по прохождению тестов студентом.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Filters.StudentPassRateSummaryFilter.StudentId">
+            <summary>ID студента. Если не указан — берётся из токена/cookie для студентов.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.StudentRatingFilter">
+            <summary>Фильтр для отчёта «Общий рейтинг студентов».</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Filters.StudentTestResultsFilter">
+            <summary>Фильтр для отчёта «Результаты тестов студента».</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Filters.StudentTestResultsFilter.StudentId">
+            <summary>ID студента. Если не указан — берётся из токена/cookie для студентов.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.DayOfWeekActivityItem">
+            <summary>Элемент отчёта об активности студентов по дням недели.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.DayOfWeekActivityItem.DayOfWeek">
+            <summary>Номер дня недели (0=Sunday … 6=Saturday).</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.DayOfWeekActivityItem.TestsCompleted">
+            <summary>Количество завершённых попыток.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.DayOfWeekActivityItem.UniqueStudents">
+            <summary>Уникальные студенты, активные в этот день.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem">
+            <summary>Элемент отчёта «Лидеры и отстающие» по группе.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.GroupId">
+            <summary>Идентификатор группы.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.GroupName">
+            <summary>Название группы.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.Direction">
+            <summary>Направление обучения.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.Course">
+            <summary>Курс.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.LeaderName">
+            <summary>ФИО лидера группы.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.LeaderScore">
+            <summary>Суммарный балл лидера.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.LaggardName">
+            <summary>ФИО отстающего студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupLeadersAndLaggardsItem.LaggardScore">
+            <summary>Суммарный балл отстающего.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.GroupTrendItem">
+            <summary>Элемент отчёта о динамике среднего балла группы по месяцам.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupTrendItem.GroupId">
+            <summary>Идентификатор группы.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupTrendItem.GroupName">
+            <summary>Название группы.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupTrendItem.Month">
+            <summary>Начало месяца (например, 2024-03-01).</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupTrendItem.MonthLabel">
+            <summary>Подпись месяца для отображения («Мар 2024»).</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupTrendItem.AverageScore">
+            <summary>Средний балл попыток за месяц.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.GroupTrendItem.AttemptsCount">
+            <summary>Количество попыток за месяц.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.StudentMonthlyProgressItem">
+            <summary>Элемент отчёта о ежемесячном прогрессе студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentMonthlyProgressItem.Month">
+            <summary>Начало месяца.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentMonthlyProgressItem.MonthLabel">
+            <summary>Подпись месяца («Мар 2024»).</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentMonthlyProgressItem.Score">
+            <summary>Баллы за месяц.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentMonthlyProgressItem.CumulativeScore">
+            <summary>Нарастающий итог баллов.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.StudentPassRateItem">
+            <summary>Элемент отчёта о проценте пройденных тестов по студентам группы.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateItem.StudentId">
+            <summary>Идентификатор студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateItem.FullName">
+            <summary>ФИО студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateItem.Group">
+            <summary>Название группы студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateItem.TestsAvailable">
+            <summary>Количество доступных тестов.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateItem.TestsPassed">
+            <summary>Количество пройденных тестов.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateItem.PassRate">
+            <summary>Процент прохождения (0–100).</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem">
+            <summary>Сводный отчёт о прохождении тестов конкретным студентом.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem.StudentId">
+            <summary>Идентификатор студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem.FullName">
+            <summary>ФИО студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem.TestsAttempted">
+            <summary>Количество тестов, к которым была хотя бы одна попытка.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem.TestsPassed">
+            <summary>Количество успешно пройденных тестов.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem.PassRate">
+            <summary>Процент успешного прохождения (0–100).</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem.TotalScore">
+            <summary>Сумма всех баллов студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentPassRateSummaryItem.AverageScore">
+            <summary>Средний балл за одну попытку.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.StudentRatingItem">
+            <summary>Элемент отчёта «Общий рейтинг студентов».</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentRatingItem.Rank">
+            <summary>Место в рейтинге.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentRatingItem.FullName">
+            <summary>ФИО студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentRatingItem.Course">
+            <summary>Курс.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentRatingItem.Group">
+            <summary>Группа.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentRatingItem.Direction">
+            <summary>Направление.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentRatingItem.TotalScore">
+            <summary>Суммарный балл.</summary>
+        </member>
+        <member name="T:PerformanceAnalysis.Reports.Models.StudentTestResultsItem">
+            <summary>Элемент отчёта о результатах тестов конкретного студента.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentTestResultsItem.TestId">
+            <summary>Идентификатор теста.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentTestResultsItem.TestTitle">
+            <summary>Название теста.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentTestResultsItem.BestScore">
+            <summary>Лучший балл среди всех попыток.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentTestResultsItem.MaxPossibleScore">
+            <summary>Максимально возможный балл теста.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentTestResultsItem.Passed">
+            <summary>Пройден ли тест.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentTestResultsItem.CompletedAt">
+            <summary>Дата последней завершённой попытки.</summary>
+        </member>
+        <member name="P:PerformanceAnalysis.Reports.Models.StudentTestResultsItem.AttemptsCount">
+            <summary>Общее количество попыток.</summary>
+        </member>
+    </members>
+</doc>

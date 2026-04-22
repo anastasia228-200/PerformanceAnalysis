@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PerformanceAnalysis.API</name>
+    </assembly>
+    <members>
+        <member name="M:PerformanceAnalysis.API.Controllers.AuthController.Register(PerformanceAnalysis.Domain.Entities.RegisterRequest)">
+            <summary>Регистрация нового студента.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.API.Controllers.AuthController.Login(PerformanceAnalysis.Domain.Entities.LoginRequest)">
+            <summary>Вход через JWT.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.API.Controllers.AuthController.LoginWithCookie(PerformanceAnalysis.Domain.Entities.LoginWithCookieRequest)">
+            <summary>Вход через Cookie.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.API.Controllers.AuthController.Logout">
+            <summary>Выход — удаляет Cookie-сессию.</summary>
+        </member>
+        <member name="M:PerformanceAnalysis.API.Controllers.AuthController.GetCurrentUser">
+            <summary>Тест авторизации — возвращает claims текущего пользователя.</summary>
+        </member>
+    </members>
+</doc>

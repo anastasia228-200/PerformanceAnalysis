@@ -59,7 +59,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: PerformanceAnalysis/Dockerfile
+        file: PerformanceAnalysis.API/Dockerfile
         push: true
         tags: |
           ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
